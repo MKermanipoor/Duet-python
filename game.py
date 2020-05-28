@@ -1,20 +1,37 @@
 import pyglet
 from pyglet.window import key
 from agent import Agent
+from obstacle import Obstacle
 
 
 class Game(pyglet.window.Window):
-    is_left_pressed = False
-    is_right_pressed = False
-
-    center_circle = None
-    agent = None
 
     def on_draw(self):
         self.clear()
         self.agent.draw()
 
-    def move(self, dt):
+        for obstacle in self.obstacles:
+            obstacle.draw()
+
+    def create_obstacle(self):
+        if len(self.obstacles) > 0:
+            if self.height - self.obstacles[-1].get_y() - self.obstacles[-1].get_height() > self.width * 0.38:
+                self.obstacles.append(Obstacle.make_random_obstacle(self))
+        else:
+            self.obstacles.append(Obstacle.make_random_obstacle(self))
+
+    def remove_die_obstacle(self):
+        if len(self.obstacles) > 0:
+            if not self.obstacles[0].alive:
+                self.obstacles = self.obstacles[1:]
+
+    def iterate(self, dt):
+        self.create_obstacle()
+        self.remove_die_obstacle()
+
+        for obstacle in self.obstacles:
+            obstacle.move(dt)
+
         if self.is_left_pressed:
             self.agent.tern_left(dt)
         if self.is_right_pressed:
@@ -34,6 +51,11 @@ class Game(pyglet.window.Window):
 
     def __init__(self):
         super(Game, self).__init__(width=400, height=822, resizable=False)
-        self.center_circle = [self.width // 2, self.width // 2 + 10]
+
+        self.is_left_pressed = False
+        self.is_right_pressed = False
+
         self.agent = Agent(self)
-        pyglet.clock.schedule(self.move)
+        self.obstacles = []
+
+        pyglet.clock.schedule(self.iterate)

@@ -3,30 +3,23 @@ import numpy as np
 
 
 class Agent:
-    x = 0
-    center_circle = [0, 0]
-    center_radius = None
-
     blue_ball_angle = 0.0
-    blue_ball_sprite = None
-    red_ball_sprite = None
-
     angular_velocity = np.pi
 
-    def __init__(self, window):
-        self.center_circle = [window.width // 2, window.width // 4 + window.width * .08 + 15]
-        self.center_radius = window.width // 4
+    def __init__(self, game):
+        self.center_circle = [game.width // 2, game.width // 4 + game.width * .08 + 15]
+        self.center_radius = game.width // 4
 
         blue_circle = pyglet.resource.image('resource/images/blue-circle.png')
-        blue_circle.width = window.width * .08
-        blue_circle.height = window.width * .08
+        blue_circle.width = game.width * .08
+        blue_circle.height = game.width * .08
         blue_circle.anchor_x = blue_circle.width // 2
         blue_circle.anchor_y = blue_circle.height // 2
         self.blue_ball_sprite = pyglet.sprite.Sprite(blue_circle)
 
         red_circle = pyglet.resource.image('resource/images/red-circle.png')
-        red_circle.width = window.width * .08
-        red_circle.height = window.width * .08
+        red_circle.width = game.width * .08
+        red_circle.height = game.width * .08
         red_circle.anchor_x = red_circle.width // 2
         red_circle.anchor_y = red_circle.height // 2
         self.red_ball_sprite = pyglet.sprite.Sprite(red_circle)
