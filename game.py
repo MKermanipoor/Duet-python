@@ -15,7 +15,7 @@ class Game(pyglet.window.Window):
 
     def create_obstacle(self):
         if len(self.obstacles) > 0:
-            if self.height - self.obstacles[-1].get_y() - self.obstacles[-1].get_height() > self.width * 0.38:
+            if self.height - self.obstacles[-1].get_y() - self.obstacles[-1].get_height() // 2 > self.width * 0.38:
                 self.obstacles.append(Obstacle.make_random_obstacle(self))
         else:
             self.obstacles.append(Obstacle.make_random_obstacle(self))
@@ -36,6 +36,10 @@ class Game(pyglet.window.Window):
             self.agent.tern_left(dt)
         if self.is_right_pressed:
             self.agent.tern_right(dt)
+
+        for obstacle in self.obstacles:
+            if self.agent.is_intersects(obstacle):
+                obstacle.touch()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.LEFT:

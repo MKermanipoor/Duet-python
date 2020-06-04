@@ -50,3 +50,26 @@ class Agent:
         self.blue_ball_angle -= self.angular_velocity * dt
         if self.blue_ball_angle < 0:
             self.blue_ball_angle += 2 * np.pi
+    
+    def is_intersects(self, obstacle):
+        return Agent.__is_ball_intersects(self.blue_ball_sprite, obstacle) or Agent.__is_ball_intersects(self.red_ball_sprite, obstacle)
+
+    @staticmethod
+    def __is_ball_intersects(ball, obstacle):
+        dx = abs(ball.x - obstacle.get_x())
+        dy = abs(ball.y - obstacle.get_y())
+
+        if dx > obstacle.get_width() / 2 + ball.width:
+            return False
+        if dy > obstacle.get_height() / 2 + ball.height:
+            return False
+
+        if dx <= obstacle.get_width() / 2:
+            return True
+        if dy <= obstacle.get_height() / 2:
+            return True
+
+        corner_distance_sq = (dx - obstacle.get_width() / 2) ** 2 + (dy - obstacle.get_height() / 2) ** 2
+
+        return corner_distance_sq <= (ball.width ^ 2)
+
